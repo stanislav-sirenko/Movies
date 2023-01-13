@@ -1,0 +1,15 @@
+.movies-app {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.ant-alert {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ant-space-item {
+  min-width: 700px;
+}
