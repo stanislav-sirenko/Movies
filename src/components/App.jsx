@@ -1,42 +1,42 @@
-import React, { Component } from "react";
-import { Offline, Online } from "react-detect-offline";
-import { Tabs, Alert, Space, Pagination } from "antd";
+import React, { Component } from 'react'
+import { Offline, Online } from 'react-detect-offline'
+import { Tabs, Alert, Space, Pagination } from 'antd'
 
-import serverRequest from "../services/api-request";
-import genresRequest from "../services/genres-request.js";
-import { guestSessionRequest, getRequest } from "../services/guest-session.js";
-import { Provider } from "../context/index.js";
+import serverRequest from '../services/api-request'
+import genresRequest from '../services/genres-request.js'
+import { guestSessionRequest, getRequest } from '../services/guest-session.js'
+import { Provider } from '../context/index.js'
 
-import SearchForm from "./SearchForm/SearchForm";
-import Preloader from "./Preloader/Preloader";
+import SearchForm from './SearchForm/SearchForm'
+import Preloader from './Preloader/Preloader'
 
-import "./App.css";
-const Movies = React.lazy(() => import("./Movies/Movies"));
+import './App.css'
+const Movies = React.lazy(() => import('./Movies/Movies'))
 
 export default class App extends Component {
   state = {
     movies: [],
     ratedMovies: [],
     genresMovies: [],
-    value: "",
+    value: '',
     totalPage: null,
     currentPage: 1,
-  };
+  }
 
   componentDidMount() {
-    genresRequest().then((genresMovies) => this.setState({ genresMovies: genresMovies.genres }));
+    genresRequest().then((genresMovies) => this.setState({ genresMovies: genresMovies.genres }))
     guestSessionRequest().then((guestSession) => {
-      !localStorage.getItem("guest") && localStorage.setItem("guest", `${guestSession.guest_session_id}`);
-    });
+      !localStorage.getItem('guest') && localStorage.setItem('guest', `${guestSession.guest_session_id}`)
+    })
   }
 
   onChangeTabs = () => {
     getRequest().then((dataRate) => {
       this.setState({
         ratedMovies: dataRate.results,
-      });
-    });
-  };
+      })
+    })
+  }
 
   searchMovie = (inputText) => {
     if (inputText) {
@@ -46,10 +46,10 @@ export default class App extends Component {
           movies: data.results,
           totalPage: data.total_pages,
           currentPage: data.page,
-        });
-      });
+        })
+      })
     }
-  };
+  }
 
   nextPage = (valuePagination) => {
     serverRequest(this.state.value, valuePagination).then((data) => {
@@ -57,12 +57,12 @@ export default class App extends Component {
         movies: data.results,
         totalPage: data.total_pages,
         currentPage: data.page,
-      });
-    });
-  };
+      })
+    })
+  }
 
   render() {
-    const { movies, ratedMovies, genresMovies, currentPage, totalPage } = this.state;
+    const { movies, ratedMovies, genresMovies, currentPage, totalPage } = this.state
 
     return (
       <Tabs
@@ -71,8 +71,8 @@ export default class App extends Component {
         onChange={this.onChangeTabs}
         items={[
           {
-            label: "Поиск",
-            key: "1",
+            label: 'Поиск',
+            key: '1',
             children: (
               <>
                 <Online>
@@ -97,7 +97,7 @@ export default class App extends Component {
                   <Space
                     direction="vertical"
                     style={{
-                      width: "100%",
+                      width: '100%',
                     }}
                   >
                     <Alert
@@ -112,8 +112,8 @@ export default class App extends Component {
             ),
           },
           {
-            label: "Рейтинг",
-            key: "2",
+            label: 'Рейтинг',
+            key: '2',
             children: (
               <Provider value={genresMovies}>
                 <div className="movies-app">
@@ -126,6 +126,6 @@ export default class App extends Component {
           },
         ]}
       />
-    );
+    )
   }
 }
